@@ -4,12 +4,17 @@ echo "WELCOME TO SNAKE AND LADDER STIMULATOR"
 
 #VARIABLES
 position=0
-NOPLAY=0
-LADDER=1
-SNAKE=2
+IFNOPLAY=0
+IFLADDER=1
+IFSNAKE=2
 moveValue=0
 moveOption=0
+noOfTimesDiceRolled=0
+WINNING_POSITION=100
+ZERO_POSITION=0
 
+#DICTIONARY DECLARATION
+declare -A diceChart
 
 function playOption()
 {
@@ -28,32 +33,40 @@ while [ $position -le 100 ]
 do
 	moveOption=$(playOption)
 	moveValue=$(rollDice)
+	noOfTimesDiceRolled=$(( $noOfTimesDiceRolled +1 ))
 
-	if [[  $moveOption -eq $NOPLAY ]]
+	if [[  $moveOption -eq $IFNOPLAY ]]
 	then
 		echo "NO MOVE"
 		echo "POSITION:" $position
-	elif [[ $moveOption -eq $LADDER ]]
+	elif [[ $moveOption -eq $IFLADDER ]]
 	then
 		echo "YOU WILL MOVE BY POSITION" $moveValue
 		position=$(( $moveValue + $position ))
 		echo "POSITION:"$position
-	elif [[ $moveOption -eq $SNAKE ]]
+	elif [[ $moveOption -eq $IFSNAKE ]]
 	then
 		echo "YOU WILL COME BEHIND BY POSITION" $moveValue
 		position=$(( $position - $moveValue ))
 		echo "POSITION:" $position
 	fi
-	if [ $position -lt 0 ]
+	if [ $position -lt $ZERO_POSITION ]
 	then
 		position=0
-	elif [ $position -eq 100 ]
+	elif [ $position -eq $WINNING_POSITION ]
 	then
+		diceChart[$noOfTimesDiceRolled]=$position
 		break
-	elif [ $position -gt 100 ]
+	elif [ $position -gt $WINNING_POSITION ]
 	then
 		position=$(( $position -$moveValue ))
 	fi
+	diceChart[$noOfTimesDiceRolled]=$position
 done
 echo "YOU WIN"
-echo "FINAL POSITION IS: " $position
+for k in  ${!diceChart[@]}
+do
+	echo ' DICEROLLED: ' $k 'times. Final POSITION:' ${diceChart["$k"]}
+done |
+sort -n -k2 | tail -1
+
