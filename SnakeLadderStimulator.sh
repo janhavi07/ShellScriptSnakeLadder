@@ -1,6 +1,6 @@
 #!/bin/bash -x 
 
-echo "WELCOME TO SNAKE AND LADDER STIMULATOR"
+echo "*****WELCOME TO SNAKE AND LADDER STIMULATOR*****"
 
 #VARIABLES
 position=0
@@ -12,9 +12,14 @@ moveOption=0
 noOfTimesDiceRolled=0
 WINNING_POSITION=100
 ZERO_POSITION=0
+NO_OF_PLAYERS=2
+PLAYER1=1
+PLAYER2=2
+playerTurn=2
 
 #DICTIONARY DECLARATION
 declare -A diceChart
+declare -A playerChart
 
 function playOption()
 {
@@ -27,14 +32,31 @@ function rollDice()
 	diceRoll=$[ ($RANDOM%6) +1 ]
 	echo $diceRoll
 }
+function assigningPlayerPosition()
+{
+	for(( i=1; i<=$NO_OF_PLAYERS; i++ ))
+	do
+		playerChart[$i]=$ZERO_POSITION
+	done
+}
+function whichPlayerWillPlay()
+{
+	if [[ $playerTurn -eq $PLAYER1 ]]
+        then
+                playerTurn=$PLAYER2
+        else
+                playerTurn=$PLAYER1
+        fi
+	echo $playerTurn
 
-echo "ROLL THE DICE"
-while [ $position -le 100 ]
+}
+echo "*****ROLL THE DICE****"
+assigningPlayerPosition
+while [ $position -le $WINNING_POSITION ]
 do
 	moveOption=$(playOption)
 	moveValue=$(rollDice)
-	noOfTimesDiceRolled=$(( $noOfTimesDiceRolled +1 ))
-
+	playerTurn=$(whichPlayerWillPlay)
 	if [[  $moveOption -eq $IFNOPLAY ]]
 	then
 		echo "NO MOVE"
@@ -50,23 +72,25 @@ do
 		position=$(( $position - $moveValue ))
 		echo "POSITION:" $position
 	fi
-	if [ $position -lt $ZERO_POSITION ]
-	then
-		position=0
-	elif [ $position -eq $WINNING_POSITION ]
-	then
-		diceChart[$noOfTimesDiceRolled]=$position
-		break
-	elif [ $position -gt $WINNING_POSITION ]
-	then
-		position=$(( $position -$moveValue ))
-	fi
-	diceChart[$noOfTimesDiceRolled]=$position
+
+		if [ $position -lt $ZERO_POSITION ]
+		then
+			position=$ZERO_POSITION
+			elif [ $position -eq $WINNING_POSITION ]
+		then
+			playerChart[$playerTurn]=$position
+			break
+		elif [ $position -gt $WINNING_POSITION ]
+		then
+			position=$(( $position -$moveValue ))
+		fi
+
+	playerChart[$playerTurn]=$position
+
 done
-echo "YOU WIN"
-for k in  ${!diceChart[@]}
+for k in  ${!playerChart[@]}
 do
-	echo ' DICEROLLED: ' $k 'times. Final POSITION:' ${diceChart["$k"]}
+	echo ' Player-' $k 'won by being at position' ${playerChart["$k"]}
 done |
-sort -n -k2 | tail -1
+sort -n -k8 | tail -1
 
