@@ -47,6 +47,12 @@ do
 	if [ $position -lt 0 ]
 	then
 		position=0
+	elif [ $position -eq 100 ]
+	then
+		break
+	elif [ $position -gt 100 ]
+	then
+		position=$(( $position -$moveValue ))
 	fi
 done
 echo "YOU WIN"
