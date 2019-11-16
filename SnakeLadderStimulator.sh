@@ -3,31 +3,31 @@
 echo "*****WELCOME TO SNAKE AND LADDER STIMULATOR*****"
 
 #VARIABLES
-position=0
-IFNOPLAY=0
-IFLADDER=1
-IFSNAKE=2
-moveValue=0
-moveOption=0
-noOfTimesDiceRolled=0
-WINNING_POSITION=100
-ZERO_POSITION=0
-NO_OF_PLAYERS=2
-PLAYER1=1
-PLAYER2=2
-playerTurn=2
+declare positionOfPlayer=0
+declare IFNOPLAY=0
+declare IFLADDER=1
+declare IFSNAKE=2
+declare moveValue=0
+declare moveOption=0
+declare noOfTimesDiceRolled=0
+declare WINNING_POSITION=100
+declare ZERO_POSITION=0
+declare NO_OF_PLAYERS=2
+declare PLAYER1=1
+declare PLAYER2=2
+declare playerTurn=2
 
 #DICTIONARY DECLARATION
 declare -A diceChart
 declare -A playerChart
 
-function playOption()
+function playingOption()
 {
 	option=$[ ($RANDOM%3) ]
 	echo $option
 }
 
-function rollDice()
+function rollingDice()
 {
 	diceRoll=$[ ($RANDOM%6) +1 ]
 	echo $diceRoll
@@ -50,42 +50,44 @@ function whichPlayerWillPlay()
 	echo $playerTurn
 
 }
+
+
 echo "*****ROLL THE DICE****"
 assigningPlayerPosition
-while [ $position -le $WINNING_POSITION ]
+while [ $positionOfPlayer -le $WINNING_POSITION ]
 do
-	moveOption=$(playOption)
-	moveValue=$(rollDice)
+	moveOption=$(playingOption)
+	moveValue=$(rollingDice)
 	playerTurn=$(whichPlayerWillPlay)
 	if [[  $moveOption -eq $IFNOPLAY ]]
 	then
 		echo "NO MOVE"
-		echo "POSITION:" $position
+		echo "POSITION:" $positionOfPlayer
 	elif [[ $moveOption -eq $IFLADDER ]]
 	then
 		echo "YOU WILL MOVE BY POSITION" $moveValue
-		position=$(( $moveValue + $position ))
-		echo "POSITION:"$position
+		positionOfPlayer=$(( $moveValue + $positionOfPlayer ))
+		echo "POSITION:"$positionOfPlayer
 	elif [[ $moveOption -eq $IFSNAKE ]]
 	then
 		echo "YOU WILL COME BEHIND BY POSITION" $moveValue
-		position=$(( $position - $moveValue ))
-		echo "POSITION:" $position
+		positionOfPlayer=$(( $positionOfPlayer - $moveValue ))
+		echo "POSITION:" $positionOfPlayer
 	fi
 
-		if [ $position -lt $ZERO_POSITION ]
+		if [ $positionOfPlayer -lt $ZERO_POSITION ]
 		then
-			position=$ZERO_POSITION
-			elif [ $position -eq $WINNING_POSITION ]
+			positionOfPlayer=$ZERO_POSITION
+		elif [ $positionOfPlayer -eq $WINNING_POSITION ]
 		then
-			playerChart[$playerTurn]=$position
+			playerChart[$playerTurn]=$positionOfPlayer
 			break
-		elif [ $position -gt $WINNING_POSITION ]
+		elif [ $positionOfPlayer -gt $WINNING_POSITION ]
 		then
 			position=$(( $position -$moveValue ))
 		fi
 
-	playerChart[$playerTurn]=$position
+	playerChart[$playerTurn]=$positionOfPlayer
 
 done
 for k in  ${!playerChart[@]}
