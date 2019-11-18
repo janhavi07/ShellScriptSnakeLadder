@@ -16,7 +16,7 @@ declare NO_OF_PLAYERS=2
 declare PLAYER1=1
 declare PLAYER2=2
 declare playerTurn=2
-declare k=columnsOfDictionary
+
 
 #DICTIONARY DECLARATION
 declare -A diceChart
@@ -24,8 +24,8 @@ declare -A playerChart
 
 function playingOption()
 {
-	option=$[ ($RANDOM%3) ]
-	echo $option
+	optionToPlay=$[ ($RANDOM%3) ]
+	echo $optionToPlay
 }
 
 function rollingDice()
@@ -91,9 +91,9 @@ do
 	playerChart[$playerTurn]=$positionOfPlayer
 
 done
-for k in  ${!playerChart[@]}
+for column in  ${!playerChart[@]}
 do
-	echo ' Player-' $k 'won by being at position' ${playerChart["$k"]}
+	echo ' Player-' $column 'won by being at position' ${playerChart["$column"]}
 done |
 sort -n -k8 | tail -1
 
