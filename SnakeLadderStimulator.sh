@@ -16,6 +16,7 @@ declare NO_OF_PLAYERS=2
 declare PLAYER1=1
 declare PLAYER2=2
 declare playerTurn=2
+declare k=columnsOfDictionary
 
 #DICTIONARY DECLARATION
 declare -A diceChart
@@ -75,22 +76,22 @@ do
 		echo "POSITION:" $positionOfPlayer
 	fi
 
-		if [ $positionOfPlayer -lt $ZERO_POSITION ]
-		then
-			positionOfPlayer=$ZERO_POSITION
-		elif [ $positionOfPlayer -eq $WINNING_POSITION ]
-		then
-			playerChart[$playerTurn]=$positionOfPlayer
-			break
-		elif [ $positionOfPlayer -gt $WINNING_POSITION ]
-		then
-			position=$(( $position -$moveValue ))
-		fi
+	if [ $positionOfPlayer -lt $ZERO_POSITION ]
+	then
+		positionOfPlayer=$ZERO_POSITION
+	elif [ $positionOfPlayer -eq $WINNING_POSITION ]
+	then
+		playerChart[$playerTurn]=$positionOfPlayer
+		break
+	elif [ $positionOfPlayer -gt $WINNING_POSITION ]
+	then
+		positionOfPlayer=$(( $positionOfPlayer -$moveValue ))
+	fi
 
 	playerChart[$playerTurn]=$positionOfPlayer
 
 done
-for kColumns in  ${!playerChart[@]}
+for k in  ${!playerChart[@]}
 do
 	echo ' Player-' $k 'won by being at position' ${playerChart["$k"]}
 done |
