@@ -35,7 +35,7 @@ function rollingDice()
 }
 function assigningPlayerPosition()
 {
-	for(( player=1; i<=$NO_OF_PLAYERS; i++ ))
+	for(( player=1; player<=$NO_OF_PLAYERS; player++ ))
 	do
 		playerChart[$player]=$ZERO_POSITION
 	done
