@@ -90,7 +90,7 @@ do
 	playerChart[$playerTurn]=$positionOfPlayer
 
 done
-for k in  ${!playerChart[@]}
+for kColumns in  ${!playerChart[@]}
 do
 	echo ' Player-' $k 'won by being at position' ${playerChart["$k"]}
 done |
